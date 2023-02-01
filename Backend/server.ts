@@ -1,5 +1,5 @@
-const express = require("express");
-const cors = require("cors");
+import * as express from "express";
+import * as cors from "cors";
 
 const app = express();
 const corsOptions = {
@@ -7,7 +7,7 @@ const corsOptions = {
   credentials: true,
 };
 app.use(cors(corsOptions));
-const http = require("http");
+import * as http from "http";
 const httpClient = http.createServer(app);
 // Express App Config
 app.use(express.json());
