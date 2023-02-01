@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-const authService = require("api/auth/auth.service");
+import { authService } from "./auth.service";
 
 async function signup(req: Response, res: Request) {
   try {

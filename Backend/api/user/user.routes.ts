@@ -1,6 +1,6 @@
-const express = require("express");
+import * as express from "express";
 const router = express.Router();
-const userController = require("api/user/user.controller");
+import { userController } from "./user.controller";
 
 router.get("/", userController.getUsers);
 router.get("/:userId", userController.getUserById);

@@ -13,9 +13,9 @@ const httpClient = http.createServer(app);
 app.use(express.json());
 
 // routes
-const authRoutes = require("api/auth/auth.routes");
-const userRoutes = require("api/user/user.routes");
-const calendarRoutes = require("api/calendar/calendar.routes");
+import userRoutes from "./api/user/user.routes";
+import authRoutes from "./api/auth/auth.routes";
+import calendarRoutes from "./api/calendar/calendar.routes";
 
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);

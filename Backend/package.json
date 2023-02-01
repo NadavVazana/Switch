@@ -1,5 +1,6 @@
 {
   "name": "backend",
+  "type": "module",
   "version": "1.0.0",
   "description": "<img src=\"https://res.cloudinary.com/ds8xkm0ue/image/upload/v1673644270/icons8-restaurant-building-64_hvxhnu.png\" />",
   "scripts": {
