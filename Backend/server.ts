@@ -7,7 +7,7 @@ const corsOptions = {
   credentials: true,
 };
 app.use(cors(corsOptions));
-import * as http from "http";
+const http = require("http");
 const httpClient = http.createServer(app);
 // Express App Config
 app.use(express.json());
