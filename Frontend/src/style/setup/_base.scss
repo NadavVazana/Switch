@@ -1,0 +1,35 @@
+.app{
+    display: flex;
+    height: 100vh;
+    font-family: Roboto;
+  overflow: hidden;
+    @media (max-width:700px) {
+        flex-direction: column;
+        
+    }
+}
+
+
+
+html{
+
+      
+      /* Track */
+      ::-webkit-scrollbar-track {
+        
+        background: #f1f1f1;
+      }
+      
+      /* Handle */
+      ::-webkit-scrollbar-thumb {
+        border-radius: 20px;
+
+        background: #888;
+      }
+      
+      /* Handle on hover */
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+}
+

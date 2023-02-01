@@ -1,0 +1,47 @@
+.adding-modal{
+    color: white;
+    cursor: auto;
+    background-color: #293439;
+    position: fixed;
+    width: 20%;
+    border-radius: 20px;
+    height: 70%;
+    z-index: 100;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    text-align: center;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+
+    form{
+        height: 100%;
+        > *:not(button){
+            width: 100%;
+            height:80%;
+            display: grid;
+            align-items: center;
+            justify-items: center;
+            grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
+        }
+
+
+    }
+
+    @media (max-width:700px) {
+        width:100%
+        
+    }
+
+    @media (min-width:701px) {
+        width: 80%;
+        
+    }
+    @media (min-width:1000px) {
+        width: 60%;
+        
+    }
+    @media (min-width:1200px) {
+        width: 30%;
+        
+    }
+}

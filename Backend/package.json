@@ -1,0 +1,33 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "<img src=\"https://res.cloudinary.com/ds8xkm0ue/image/upload/v1673644270/icons8-restaurant-building-64_hvxhnu.png\" />",
+  "scripts": {
+    "db:dev:restart": "docker-compose rm app",
+    "db:app:start": "docker-compose up app -d",
+    "start": "node server.ts",
+    "dev": "nodemon --ignore \"./data\" server.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NadavVazana/Restaurant-API.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NadavVazana/Restaurant-API/issues"
+  },
+  "homepage": "https://github.com/NadavVazana/Restaurant-API#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
+    "cryptr": "^6.1.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "http": "^0.0.1-security",
+    "http-errors": "^2.0.0",
+    "mongodb": "^4.13.0"
+  }
+}

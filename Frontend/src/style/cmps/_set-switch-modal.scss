@@ -1,0 +1,56 @@
+
+    .set-switch-modal{
+        cursor: auto;
+        overflow-y: auto;
+        color: white;
+        background-color: #293439;
+        position: fixed;
+        width: 60%;
+        border-radius: 20px;
+        height: 70%;
+        z-index: 100;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%,-50%);
+        text-align: center;
+        font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+
+
+        img{
+            width: 60px;
+            position: absolute;
+            filter: invert(100%);
+            right: 10px;
+            top: 10px;
+            cursor: pointer;
+        }
+
+        @media (max-width:1000px) {
+            width: 80%;
+            height: 50%;
+            
+        }
+        @media (max-width:750px) {
+            width: 100%;
+            height: 50%;
+            
+        }
+
+    
+    }
+    .black-screen{
+        position: fixed;
+        background-color: rgba(0, 0, 0, 0.414);
+        width: 100vw;
+        height: 100vh;
+        top: 0;
+        left: 0;
+        z-index: 10;
+        cursor: pointer;
+    
+    
+    
+    }
+
+
+
