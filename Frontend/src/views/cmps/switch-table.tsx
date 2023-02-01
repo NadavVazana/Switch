@@ -253,16 +253,18 @@ function SwitchTable({
               sx={{
                 cursor: "pointer",
                 paddingInlineEnd: "0",
+                minWidth: "50px",
               }}
             >
               שם {isNameUp ? "↑" : "↓"}
             </TableCell>
-            <TableCell>מספר טלפון</TableCell>
+            <TableCell sx={{ minWidth: "100px" }}>מספר טלפון</TableCell>
             <TableCell
               onClick={onFilterHours}
               sx={{
                 cursor: "pointer",
                 paddingInlineEnd: "0",
+                minWidth: "100px",
               }}
             >
               שעות {isEarlyHoursUp ? "↑" : "↓"}

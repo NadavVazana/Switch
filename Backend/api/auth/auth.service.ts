@@ -60,7 +60,7 @@ async function signupUser(user: User) {
   return user;
 }
 
-export const authService = {
+module.exports = {
   loginUser,
 
   signupUser,
