@@ -25,7 +25,9 @@ async function connect() {
   if (dbConn) return dbConn;
 
   try {
-    const client = await MongoClient.connect(config["config"].dbURL);
+    const client = await MongoClient.connect(
+      "mongodb+srv://nadav:6495@switch.waqiucb.mongodb.net/?retryWrites=true&w=majority"
+    );
 
     const db = client.db(dbName);
     dbConn = db;
