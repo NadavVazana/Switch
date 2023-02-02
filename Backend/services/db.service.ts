@@ -31,6 +31,8 @@ async function connect() {
     dbConn = db;
     return db;
   } catch (err) {
+    console.log("errorrrrrrrrrrrrrrr");
+
     console.log(err);
 
     throw err;
