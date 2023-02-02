@@ -13,12 +13,16 @@ async function collection(): Promise<Collection> {
 }
 
 async function query() {
-  let calendar = await (await collection()).find({}).toArray();
+  try {
+    let calendar = await (await collection()).find({}).toArray();
 
-  if (!calendar) {
-    throw new createHttpError.NotFound(`Could\'nt get the calendar`);
+    if (!calendar) {
+      throw new createHttpError.NotFound(`Could\'nt get the calendar`);
+    }
+    return calendar;
+  } catch (error) {
+    throw error;
   }
-  return calendar;
 }
 
 function isDayPassed(date: Date) {

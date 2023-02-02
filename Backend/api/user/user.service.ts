@@ -21,7 +21,11 @@ async function getUserByEmail(email: string) {
 }
 
 async function query() {
-  return await (await collection()).find({}).toArray();
+  try {
+    return await (await collection()).find({}).toArray();
+  } catch (error) {
+    throw error;
+  }
 }
 
 async function getUser(userId: string) {
