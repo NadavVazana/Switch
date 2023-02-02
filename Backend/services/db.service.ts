@@ -12,7 +12,6 @@ var dbConn = null;
 async function getCollection(collectionName: string) {
   try {
     const db = await connect();
-    console.log(db);
 
     const collection = await db.collection(collectionName);
 
@@ -24,6 +23,8 @@ async function getCollection(collectionName: string) {
 
 async function connect() {
   if (dbConn) return dbConn;
+  console.log("here");
+
   try {
     const client = await MongoClient.connect(config["config"].dbURL);
 
