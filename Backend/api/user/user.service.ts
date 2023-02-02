@@ -9,7 +9,11 @@ const EntityType = {
 };
 
 async function collection() {
-  return dbService.getCollection("user");
+  try {
+    return dbService.getCollection("user");
+  } catch (error) {
+    throw error;
+  }
 }
 
 async function getUserByEmail(email: string) {

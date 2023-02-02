@@ -5,7 +5,11 @@ import { Switch } from "models/switch";
 import * as createHttpError from "http-errors";
 
 async function collection(): Promise<Collection> {
-  return dbService.getCollection("calendar");
+  try {
+    return dbService.getCollection("calendar");
+  } catch (error) {
+    throw error;
+  }
 }
 
 async function query() {
