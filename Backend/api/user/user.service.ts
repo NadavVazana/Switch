@@ -17,14 +17,16 @@ async function collection() {
 }
 
 async function getUserByEmail(email: string) {
-  return await (await collection()).findOne({ email });
+  try {
+    return await (await collection()).findOne({ email });
+  } catch (error) {
+    throw error;
+  }
 }
 
 async function query() {
   try {
-    const users = await (await collection()).find({}).toArray();
-    console.log(users);
-    return users;
+    return await (await collection()).find({}).toArray();
   } catch (error) {
     throw error;
   }
