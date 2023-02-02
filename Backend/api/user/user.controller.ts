@@ -2,10 +2,9 @@ import { userService } from "./user.service";
 import { Request, Response } from "express";
 
 async function getUsers(req: Request, res: Response) {
-  console.log("here");
-
   try {
     const users = await userService.query();
+    console.log(users);
 
     res.json(users);
   } catch (error) {
