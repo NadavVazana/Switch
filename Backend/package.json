@@ -5,7 +5,7 @@
   "scripts": {
     "db:dev:restart": "docker-compose rm app",
     "db:app:start": "docker-compose up app -d",
-    "start": "ts-node server.ts",
+    "start": "ts-node-esm server.ts",
     "dev": "nodemon --ignore \"./data\" server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
