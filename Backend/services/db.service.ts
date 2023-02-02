@@ -25,8 +25,9 @@ async function connect() {
   if (dbConn) return dbConn;
 
   try {
+    console.log(config["config"].dbURL);
+
     const client = await MongoClient.connect(config["config"].dbURL);
-    console.log("here");
 
     const db = client.db(dbName);
     dbConn = db;
