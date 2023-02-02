@@ -21,7 +21,6 @@ async function signup(req: Response, res: Request) {
 async function logout(req: Response, res: Request) {
   try {
     res.clearCookie("loginToken");
-    res.send({ msg: "Logged out successfully" });
   } catch (error) {
     res.status(error.status).send(error);
   }

@@ -20,7 +20,9 @@ import calendarRoutes from "./api/calendar/calendar.routes";
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/calendar", calendarRoutes);
-
+process.on("unhandledRejection", (err) => {
+  console.log(err);
+});
 const port = process.env.PORT || 3030;
 httpClient.listen(port, () => {
   console.log("Server connected to port: " + port);
