@@ -17,6 +17,7 @@ async function collection() {
 
 async function loginUser(userToLogin: AuthDto) {
   const user = await userService.getUserByEmail(userToLogin.email);
+
   if (!user) {
     throw new createHttpError.NotFound(`Invalid email`);
   }

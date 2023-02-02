@@ -1,12 +1,11 @@
 {
   "name": "backend",
-  "type": "module",
   "version": "1.0.0",
   "description": "<img src=\"https://res.cloudinary.com/ds8xkm0ue/image/upload/v1673644270/icons8-restaurant-building-64_hvxhnu.png\" />",
   "scripts": {
     "db:dev:restart": "docker-compose rm app",
     "db:app:start": "docker-compose up app -d",
-    "start": "node server.ts",
+    "start": "ts-node-esm server.ts",
     "dev": "nodemon --ignore \"./data\" server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
