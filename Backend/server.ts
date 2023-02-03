@@ -3,7 +3,7 @@ import cors from "cors";
 
 const app = express();
 const corsOptions = {
-  origin: ["http://localhost:3000", "https://switch-server.onrender.com"],
+  origin: "*",
   credentials: true,
 };
 app.use(cors(corsOptions));
