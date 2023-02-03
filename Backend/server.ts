@@ -3,8 +3,8 @@ import cors from "cors";
 
 const app = express();
 const corsOptions = {
-  origin: ["18.156.158.53", "18.156.42.200", "52.59.103.54"],
-  credentials: true,
+  origin: "*",
+  credentials: false,
 };
 app.use(cors(corsOptions));
 import * as http from "http";
