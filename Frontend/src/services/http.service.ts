@@ -1,7 +1,9 @@
 import Axios from "axios";
 
 const BASE_URL =
-  process.env.NODE_ENV === "production" ? "/api/" : "//localhost:3030/api/";
+  process.env.NODE_ENV === "production"
+    ? "https://switch-server.onrender.com"
+    : "//localhost:3030/api/";
 
 var axios = Axios.create({
   withCredentials: true,
