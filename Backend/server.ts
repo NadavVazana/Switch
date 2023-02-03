@@ -3,8 +3,8 @@ import cors from "cors";
 
 const app = express();
 const corsOptions = {
-  origin: "*",
-  credentials: false,
+  origin: "https://switch-server.onrender.com",
+  credentials: true,
 };
 app.use(cors(corsOptions));
 import * as http from "http";
