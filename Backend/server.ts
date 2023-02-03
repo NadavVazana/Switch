@@ -3,7 +3,7 @@ import cors from "cors";
 
 const app = express();
 const corsOptions = {
-  origin: "https://switch-server.onrender.com",
+  origin: "https://switch-server.onrender.com/api/calendar",
   credentials: true,
 };
 app.use(cors(corsOptions));
