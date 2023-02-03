@@ -3,7 +3,7 @@ import cors from "cors";
 
 const app = express();
 const corsOptions = {
-  origin: "*",
+  origin: "https://switch-server.onrender.com",
   credentials: true,
 };
 app.use(cors(corsOptions));
