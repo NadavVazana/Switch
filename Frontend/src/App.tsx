@@ -7,6 +7,7 @@ import LoginUser from "./views/cmps/login-user";
 import React from "react";
 
 function App() {
+
   return (
     <React.StrictMode>
       <RecoilRoot>

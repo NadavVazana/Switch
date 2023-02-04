@@ -103,7 +103,7 @@ function Calendar() {
   return (
     <section className="calendar">
       <FullCalendar
-        longPressDelay={1000}
+        longPressDelay={0}
         events={eventList}
         selectable
         select={onDateSelect}
