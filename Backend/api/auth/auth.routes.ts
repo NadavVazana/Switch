@@ -24,5 +24,12 @@ router.post("/logout", (req: Request, res: Response) => {
     res.send(error);
   }
 });
+router.get("/test", (req: Request, res: Response) => {
+  try {
+    res.send("test");
+  } catch (error) {
+    res.send(error);
+  }
+});
 
 export default router;
