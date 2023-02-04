@@ -1,11 +1,17 @@
 import express from "express";
 import cors from "cors";
+import axios from "axios";
 
 const app = express();
 const corsOptions = {
   origin: ["https://switchapp.info", "http://localhost:3000"],
   credentials: true,
 };
+
+setInterval(async () => {
+  await axios.get("https://call-t1ur.onrender.com/api/test");
+}, 600000);
+
 app.use(cors(corsOptions));
 import * as http from "http";
 const httpClient = http.createServer(app);
