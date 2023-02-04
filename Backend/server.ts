@@ -3,7 +3,7 @@ import cors from "cors";
 
 const app = express();
 const corsOptions = {
-  origin: ["http://switchapp.info/"],
+  origin: ["http://switchapp.info"],
   credentials: true,
 };
 app.use(cors(corsOptions));
