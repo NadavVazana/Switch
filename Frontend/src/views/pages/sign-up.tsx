@@ -39,13 +39,17 @@ function SignUp() {
   const setLoggedInUser = useSetRecoilState(loggedInUser);
   const setSnackbar = useSetRecoilState(snackbar);
   const [errorMsg, setErrorMsg] = React.useState("");
-
+  const phoneStarts = ["050", "052", "053", "057", "055"];
   const navigate = useNavigate();
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    const isPhoneStartValid = phoneStarts.some((phoneStart) =>
+      `${data.get("Phone Number")}`.startsWith(phoneStart)
+    );
+
     if (
-      !`${data.get("Phone Number")}`.startsWith("05") ||
+      !isPhoneStartValid ||
       `${data.get("Phone Number")}`.length !== 10 ||
       isNaN(+`${data.get("Phone Number")}`)
     ) {

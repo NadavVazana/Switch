@@ -12,10 +12,12 @@ import isLoading from "../../atoms/is-loading";
 import { useEffect, useState } from "react";
 import allDates from "../../atoms/all-dates";
 import snackbar from "../../atoms/snackbar";
+import loggedInUser from "../../atoms/logged-in-user";
 
 function Calendar() {
   const setDay = useSetRecoilState(selectedDay);
   const setIsLoading = useSetRecoilState(isLoading);
+  const loggedUser = useRecoilValue(loggedInUser);
   const setIsModalOpen = useSetRecoilState(isModal);
   const setSnackbar = useSetRecoilState(snackbar);
   const setIsAdd = useSetRecoilState(isAdding);
@@ -24,39 +26,41 @@ function Calendar() {
   const dates = useRecoilValue(allDates);
 
   useEffect(() => {
-    if (dates) {
-      let eventList = [
-        {
-          start: "",
-          title: "",
-          backgroundColor: "#36AFD4",
-          borderColor: "#36AFD4",
-        },
-      ];
-
-      dates.forEach((date) => {
-        if (date.switches.some((swtch) => swtch.isTake)) {
-          eventList.push({
-            borderColor: "#36AFD4",
+    if (Object.values(loggedUser).length) {
+      if (dates) {
+        let eventList = [
+          {
+            start: "",
+            title: "",
             backgroundColor: "#36AFD4",
-            start: date.date,
-            title: "לקיחות",
-          });
-        }
-        if (date.switches.some((swtch) => !swtch.isTake)) {
-          eventList.push({
-            borderColor: "#2E7D32",
-            backgroundColor: "#2E7D32",
-            start: date.date,
-            title: "מסירות",
-          });
-        }
-      });
-      eventList.splice(0, 1);
+            borderColor: "#36AFD4",
+          },
+        ];
 
-      setEventList(eventList);
+        dates.forEach((date) => {
+          if (date.switches.some((swtch) => swtch.isTake)) {
+            eventList.push({
+              borderColor: "#36AFD4",
+              backgroundColor: "#36AFD4",
+              start: date.date,
+              title: "לקיחות",
+            });
+          }
+          if (date.switches.some((swtch) => !swtch.isTake)) {
+            eventList.push({
+              borderColor: "#2E7D32",
+              backgroundColor: "#2E7D32",
+              start: date.date,
+              title: "מסירות",
+            });
+          }
+        });
+        eventList.splice(0, 1);
+
+        setEventList(eventList);
+      }
     }
-  }, [dates]);
+  }, [dates, loggedUser]);
 
   const isDayPassed = (date: Date) => {
     const now = new Date();
@@ -105,7 +109,7 @@ function Calendar() {
       <FullCalendar
         longPressDelay={0}
         events={eventList}
-        selectable
+        selectable={Object.values(loggedUser).length ? true : false}
         select={onDateSelect}
         plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"

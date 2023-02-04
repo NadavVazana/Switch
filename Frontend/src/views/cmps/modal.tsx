@@ -7,7 +7,7 @@ import isAdding from "../../atoms/is-adding";
 import React, { FormEvent } from "react";
 import { useState } from "react";
 import currentDateList from "../../atoms/current-date-list";
-import { Date, Owner } from "../../models/date";
+import { Date as SWDate, Owner } from "../../models/date";
 import { calendarService, emptyDate } from "../../services/calendar.service";
 import loggedInUserSelector from "../../selectors/logged-in-user";
 import snackbar from "../../atoms/snackbar";
@@ -40,6 +40,19 @@ function SetSwitchModal() {
 
   const onAdding = async (ev: FormEvent) => {
     ev.preventDefault();
+
+    if (
+      (selectedDay.getDate() === new Date().getDate() &&
+        new Date(formData.startHour).getHours() < new Date().getHours()) ||
+      new Date(formData.endHour).getHours() < new Date().getHours()
+    ) {
+      setSnackbar({
+        isOpen: true,
+        msg: "Can't set previous hours",
+        variant: "error",
+      });
+      return;
+    }
     if (isEditMode) {
       editSwitch();
     } else {
@@ -96,7 +109,7 @@ function SetSwitchModal() {
     }
     await calendarService.deleteSwitch(date, dateId);
     const switches = dateList.switches.filter(
-      (date: Date) => date._id !== dateId
+      (date: SWDate) => date._id !== dateId
     );
     const dates = { ...dateList, switches: switches };
     setDateList(dates);
@@ -147,7 +160,7 @@ function SetSwitchModal() {
     }
   };
 
-  const onEdit = (row: Date) => {
+  const onEdit = (row: SWDate) => {
     if (row.owner._id !== loggedInUser._id) {
       setSnackbar({
         isOpen: true,
