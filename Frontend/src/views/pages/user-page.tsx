@@ -108,8 +108,8 @@ export const UserPage = () => {
 
   const onLogout = async () => {
     await userService.logout();
-    setLoggedUser({} as LoggedInUser);
     navigate("/");
+    setLoggedUser({} as LoggedInUser);
   };
 
   const onCloseModal = () => {
