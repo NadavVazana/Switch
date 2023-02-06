@@ -1,8 +1,13 @@
 .user-page{
     width: 100%;
+    position: relative;
     background-color: #36AFD4;
     z-index: 100;
+    
     flex-grow: 1;
+
+    overflow-y: auto;
+    
 
 
 
@@ -14,3 +19,4 @@
         top: 0;
     }
 }
+

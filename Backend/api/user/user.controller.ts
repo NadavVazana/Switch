@@ -24,8 +24,8 @@ async function updateUser(req: Request, res: Response) {
 
 async function signUp(req: Request, res: Response) {
   try {
-    const { firstName, lastName, password, email, phone } = req.body;
-    const user = { firstName, lastName, password, email, phone };
+    const { firstName, lastName, password, email, phone, role } = req.body;
+    const user = { firstName, lastName, password, email, phone, role };
     const account = await userService.addUser(user);
 
     res.json(

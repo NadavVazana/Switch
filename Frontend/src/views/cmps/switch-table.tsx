@@ -8,7 +8,6 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
@@ -42,89 +41,136 @@ function Row({ row, onEdit, onDeleteSwitch, isForUser }: RowProps) {
           <IconButton
             aria-label="expand row"
             size="small"
+            sx={{ width: { xs: "30px", md: "100px" } }}
             onClick={() => setOpen(!open)}
           >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
         {isForUser && (
-          <TableCell component="th" scope="row">
+          <TableCell sx={{ fontWeight: "700" }} component="th" scope="row">
             {new Date(row.date).toLocaleDateString("he")}
           </TableCell>
         )}
-        <TableCell component="th" scope="row">
-          {row.owner.fullName}
-        </TableCell>
         <TableCell
-          sx={{ cursor: "pointer" }}
-          onClick={() =>
-            window.open(
-              `https://api.whatsapp.com/send?phone=${row.owner.phone.substring(
-                1
-              )}`
-            )
-          }
-        >
-          {row.owner.phone}
+          sx={{ fontWeight: "700", padding: "14px", width: "150px" }}
+          align="left"
+        >{`${row.startHour} - ${row.endHour}`}</TableCell>
+        <TableCell sx={{ width: "150px", fontWeight: "700" }} align="left">
+          {row.isTake ? "לוקח" : "מוסר"}{" "}
+          {row.retention && (
+            <img
+              style={{
+                position: "static",
+                width: "10px",
+                filter: "invert(0%)",
+              }}
+              src={require("../../assets/imgs/retention.svg").default}
+              alt=""
+            />
+          )}
         </TableCell>
-        <TableCell align="left">{`${row.startHour} - ${row.endHour}`}</TableCell>
-        <TableCell align="left">{row.isTake ? "לוקח" : "מוסר"}</TableCell>
-        {row.owner._id === loggedUser._id ? (
+        <TableCell sx={{ width: "150px", fontWeight: "700" }}>
+          {row.flexible ? "כן" : "לא"}
+        </TableCell>
+
+        {row.owner._id === loggedUser._id && isForUser ? (
           <TableCell onClick={() => onEdit(row)} sx={{ cursor: "pointer" }}>
             ערוך
           </TableCell>
-        ) : (
-          <TableCell></TableCell>
-        )}
-        {row.owner._id === loggedUser._id ? (
+        ) : null}
+        {row.owner._id === loggedUser._id && isForUser ? (
           <TableCell
             onClick={() => onDeleteSwitch(row._id, row.date, row.owner)}
             sx={{ cursor: "pointer" }}
           >
             מחק
           </TableCell>
-        ) : (
-          <TableCell></TableCell>
-        )}
+        ) : null}
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             {/* Shift menu  */}
-            <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
-                Shifts
-              </Typography>
-
+            <Box sx={{ margin: 0 }}>
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell>התחלת משמרת</TableCell>
-                    <TableCell>סוף משמרת</TableCell>
-                    <TableCell align="right">?גמיש</TableCell>
-                    <TableCell align="right">?מוסר או לוקח</TableCell>
-                    <TableCell align="right">הערות</TableCell>
+                    <TableCell
+                      sx={{
+                        width: !isForUser
+                          ? { xs: "100px", md: "unset" }
+                          : { xs: "50px", md: "unset" },
+                      }}
+                    >
+                      שם
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        width: {
+                          xs: "100px",
+                          md: "unset",
+                        },
+                        padding: "10px",
+                      }}
+                    >
+                      טלפון
+                    </TableCell>
                   </TableRow>
                 </TableHead>
 
                 <TableBody>
                   <TableRow key={row._id}>
-                    <TableCell component="th" scope="row">
-                      {row.startHour}
-                    </TableCell>
-                    <TableCell>{row.endHour}</TableCell>
-                    <TableCell align="right">
-                      {row.flexible ? "כן" : "לא"}
-                    </TableCell>
-                    <TableCell align="right">
-                      {row.isTake ? "לוקח" : "מוסר"}
-                    </TableCell>
                     <TableCell
                       sx={{
-                        maxWidth: "150px",
-                        wordBreak: "break-all",
+                        maxWidth: {
+                          xs: "100px",
+                          md: "unset",
+                        },
+                        fontWeight: "700",
                       }}
-                      align="right"
+                    >
+                      {row.owner.fullName}
+                    </TableCell>
+                    <TableCell
+                      onClick={() =>
+                        !isForUser &&
+                        window.open(
+                          `https://api.whatsapp.com/send?phone=${row.owner.phone.substring(
+                            1
+                          )}`
+                        )
+                      }
+                      sx={{
+                        fontWeight: "700",
+                        cursor: "pointer",
+                        padding: "10px",
+                      }}
+                    >
+                      {row.owner.phone}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </Box>
+            <Box>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ maxWidht: "100px" }} align="center">
+                      הערות
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    <TableCell
+                      sx={{
+                        maxWidth: "100px",
+                        wordBreak: "break-all",
+                        textAlign: "right",
+                        direction: "rtl",
+                      }}
                     >
                       {row.comment}
                     </TableCell>
@@ -144,6 +190,7 @@ interface SwitchTableProps {
   onEdit: Function;
   onDeleteSwitch: Function;
   isForUser: boolean;
+  isRetention: boolean;
 }
 
 function SwitchTable({
@@ -151,18 +198,21 @@ function SwitchTable({
   onEdit,
   onDeleteSwitch,
   isForUser,
+  isRetention,
 }: SwitchTableProps) {
   const [isEarlyHoursUp, setIsEarlyHoursUp] = React.useState(false);
   const [isTakeUp, setIsTakeUp] = React.useState(true);
-  const [isNameUp, setIsNameUp] = React.useState(false);
-  const [isUserUp, setIsUserUp] = React.useState(true);
   const [isEarlyDateUp, setIsEarlyDateUp] = React.useState(true);
-  const [sortedDateList, setSortedDateList] = React.useState([...dateList]);
-  const loggedUser = useRecoilValue(loggedInUser);
+  let [sortedDateList, setSortedDateList] = React.useState([...dateList]);
 
   React.useEffect(() => {
-    setSortedDateList([...dateList]);
-  }, [dateList]);
+    if (!isRetention) {
+      const withRetentions = sortedDateList.filter((date) => !date.retention);
+      setSortedDateList(withRetentions);
+    } else {
+      setSortedDateList([...dateList]);
+    }
+  }, [dateList, isRetention]);
 
   const onFilterHours = () => {
     setIsEarlyHoursUp((prevState) => !prevState);
@@ -201,42 +251,15 @@ function SwitchTable({
     );
   };
 
-  const onFilterNames = () => {
-    setIsNameUp((prevState) => !prevState);
-
-    setSortedDateList(
-      sortedDateList.sort((a, b) => {
-        if (!isNameUp) {
-          return a.owner.fullName.localeCompare(b.owner.fullName);
-        } else {
-          return b.owner.fullName.localeCompare(a.owner.fullName);
-        }
-      })
-    );
-  };
-
-  const onFilterUser = () => {
-    setIsUserUp((prevState) => !prevState);
-
-    setSortedDateList(
-      sortedDateList.sort((a, b) => {
-        if (isUserUp) {
-          if (loggedUser._id === a.owner._id) return 1;
-          else return -1;
-        } else {
-          if (loggedUser._id === b.owner._id) return 1;
-          else return -1;
-        }
-      })
-    );
-  };
-
   return (
-    <TableContainer component={Paper}>
+    <TableContainer
+      sx={!isForUser ? { overflowX: "hidden" } : { overflowX: "auto" }}
+      component={Paper}
+    >
       <Table aria-label="collapsible table">
         <TableHead>
           <TableRow>
-            <TableCell />
+            <TableCell sx={{ width: "10px" }} />
             {isForUser && (
               <TableCell
                 sx={{
@@ -249,17 +272,6 @@ function SwitchTable({
               </TableCell>
             )}
             <TableCell
-              onClick={onFilterNames}
-              sx={{
-                cursor: "pointer",
-                paddingInlineEnd: "0",
-                minWidth: "50px",
-              }}
-            >
-              שם {isNameUp ? "↑" : "↓"}
-            </TableCell>
-            <TableCell sx={{ minWidth: "100px" }}>מספר טלפון</TableCell>
-            <TableCell
               onClick={onFilterHours}
               sx={{
                 cursor: "pointer",
@@ -269,6 +281,7 @@ function SwitchTable({
             >
               שעות {isEarlyHoursUp ? "↑" : "↓"}
             </TableCell>
+
             <TableCell
               onClick={onFilterTakes}
               sx={{
@@ -277,19 +290,17 @@ function SwitchTable({
                 minWidth: "100px",
               }}
             >
-              ?מוסר או לוקח {isTakeUp ? "↑" : "↓"}
+              ?מוסר או לוקח {isTakeUp ? "↑" : "↓"}{" "}
             </TableCell>
             <TableCell
-              onClick={onFilterUser}
               sx={{
                 cursor: "pointer",
                 paddingInlineEnd: "0",
-                minWidth: "100px",
+                minWidth: "60px",
               }}
             >
-              ההחלפות שלי {isUserUp ? "↑" : "↓"}
+              גמיש
             </TableCell>
-            <TableCell></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

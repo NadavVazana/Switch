@@ -63,10 +63,11 @@ async function deleteSwitch(date: string, dateId: string) {
 }
 
 export const emptyDate = new Date(
+  false,
   "",
   [],
   "",
-  { _id: "", phone: "", fullName: "" },
+  { _id: "", phone: "", fullName: "", role: "" },
   "",
   "",
   false,

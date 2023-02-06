@@ -1,4 +1,5 @@
 import { AuthDto } from "models/auth";
+
 import { User } from "models/user";
 import * as createHttpError from "http-errors";
 import * as bcrypt from "bcrypt";
@@ -51,7 +52,8 @@ async function signupUser(user: User) {
     !user.firstName ||
     !user.lastName ||
     !user.password ||
-    !user.phone
+    !user.phone ||
+    !user.role
   )
     throw new createHttpError.NotFound("All credentials are required!");
 

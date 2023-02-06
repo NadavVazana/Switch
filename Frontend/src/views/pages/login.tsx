@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { userService } from "../../services/user.service";
 import { useSetRecoilState } from "recoil";
 import loggedInUser from "../../atoms/logged-in-user";
+import snackbar from "../../atoms/snackbar";
 function Copyright(props: any) {
   return (
     <Typography
@@ -35,6 +36,7 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 function SignIn() {
+  const setSnackbar = useSetRecoilState(snackbar);
   const setLoggedUser = useSetRecoilState(loggedInUser);
   const [errorMsg, setErrorMsg] = React.useState("");
   const navigate = useNavigate();
@@ -49,6 +51,11 @@ function SignIn() {
     if (!user) {
       setErrorMsg("Invalid Credentials...");
     } else {
+      setSnackbar({
+        isOpen: true,
+        msg: "Logged in successfully!",
+        variant: "success",
+      });
       setErrorMsg("");
       setLoggedUser(user);
       navigate("/");

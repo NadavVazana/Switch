@@ -1,6 +1,6 @@
 export class Switch {
   date: string;
-  owner: { _id: string; phone: string; fullName: string };
+  owner: { _id: string; phone: string; fullName: string; role: string };
 
   phone: string;
   endHour: string;

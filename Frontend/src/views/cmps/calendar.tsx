@@ -23,7 +23,7 @@ function Calendar() {
   const setIsAdd = useSetRecoilState(isAdding);
   const setCurrentDateList = useSetRecoilState(currentDateList);
   const [eventList, setEventList] = useState([{}]);
-  const dates = useRecoilValue(allDates);
+  let dates = useRecoilValue(allDates);
 
   useEffect(() => {
     if (Object.values(loggedUser).length) {
@@ -38,7 +38,11 @@ function Calendar() {
         ];
 
         dates.forEach((date) => {
-          if (date.switches.some((swtch) => swtch.isTake)) {
+          if (
+            date.switches.some(
+              (swtch) => swtch.isTake && swtch.owner.role === loggedUser.role
+            )
+          ) {
             eventList.push({
               borderColor: "#36AFD4",
               backgroundColor: "#36AFD4",
@@ -46,7 +50,11 @@ function Calendar() {
               title: "לקיחות",
             });
           }
-          if (date.switches.some((swtch) => !swtch.isTake)) {
+          if (
+            date.switches.some(
+              (swtch) => !swtch.isTake && swtch.owner.role === loggedUser.role
+            )
+          ) {
             eventList.push({
               borderColor: "#2E7D32",
               backgroundColor: "#2E7D32",
@@ -92,11 +100,15 @@ function Calendar() {
     setDay(start);
     setIsAdd(false);
     setIsLoading(true);
-    const dateList = await calendarService.getDateList(
+    let dateList = await calendarService.getDateList(
       start.toLocaleDateString("en-CA")
     );
 
     if (dateList) {
+      dateList.switches = dateList.switches.filter(
+        (swtch) => swtch.owner.role === loggedUser.role
+      );
+
       setCurrentDateList(dateList);
     } else {
       setCurrentDateList(emptyDate);

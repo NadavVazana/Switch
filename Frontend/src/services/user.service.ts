@@ -42,7 +42,13 @@ async function updateUser(user: LoggedInUser): Promise<LoggedInUser | null> {
 
 async function signup(user: User): Promise<LoggedInUser | null> {
   try {
-    return await httpService.post("auth/signup", user);
+    if (!localStorage.getItem("alreadySigned")) {
+      localStorage.setItem("alreadySigned", "signed");
+
+      return await httpService.post("auth/signup", user);
+    } else {
+      return null;
+    }
   } catch (error) {
     return null;
   }

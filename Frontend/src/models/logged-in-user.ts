@@ -5,6 +5,7 @@ export class LoggedInUser {
   email: string;
   phone: string;
   img: string;
+  role: string;
 
   constructor(
     firstName: string,
@@ -12,7 +13,8 @@ export class LoggedInUser {
     email: string,
     _id: string,
     phone: string,
-    img: string
+    img: string,
+    role: string
   ) {
     this.firstName = firstName;
     this.lastName = lastName;
@@ -20,5 +22,6 @@ export class LoggedInUser {
     this.email = email;
     this.phone = phone;
     this.img = img;
+    this.role = role;
   }
 }

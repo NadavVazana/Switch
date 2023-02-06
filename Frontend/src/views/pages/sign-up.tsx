@@ -15,6 +15,15 @@ import { userService } from "../../services/user.service";
 import { useSetRecoilState } from "recoil";
 import loggedInUser from "../../atoms/logged-in-user";
 import snackbar from "../../atoms/snackbar";
+import { Select } from "@mui/joy";
+import { MenuItem } from "@mui/material";
+import FormLabel from "@mui/joy/FormLabel";
+import { useState } from "react";
+
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControl from "@mui/material/FormControl";
+import FormControlLabel from "@mui/material/FormControlLabel";
 function Copyright(props: any) {
   return (
     <Typography
@@ -37,9 +46,10 @@ const theme = createTheme();
 
 function SignUp() {
   const setLoggedInUser = useSetRecoilState(loggedInUser);
+  const [role, setRole] = useState("Courier Team");
   const setSnackbar = useSetRecoilState(snackbar);
   const [errorMsg, setErrorMsg] = React.useState("");
-  const phoneStarts = ["050", "052", "053", "057", "055"];
+  const phoneStarts = ["050", "052", "053", "057", "055", "054"];
   const navigate = useNavigate();
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -71,12 +81,19 @@ function SignUp() {
       email: `${data.get("email")}`,
       password: `${data.get("password")}`,
       phone: `${data.get("Phone Number")}`,
+      role: `${data.get("role")}`,
     };
 
     const account = await userService.signup(user);
+
     if (!account) {
       setErrorMsg("Could'nt signup, Try again later...");
     } else {
+      setSnackbar({
+        isOpen: true,
+        msg: "Signed up successfully!",
+        variant: "success",
+      });
       setLoggedInUser(account);
       setErrorMsg("");
       navigate("/");
@@ -160,6 +177,33 @@ function SignUp() {
                   id="Phone Number"
                   autoComplete="new-password"
                 />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl>
+                  <RadioGroup
+                    value={role}
+                    id="role"
+                    name="role"
+                    defaultValue="Courier Team"
+                  >
+                    <FormControlLabel
+                      onChange={() => {
+                        setRole("Courier Team");
+                      }}
+                      value="Courier Team"
+                      control={<Radio sx={{ color: "white" }} />}
+                      label="שליחים"
+                    />
+                    <FormControlLabel
+                      onChange={() => {
+                        setRole("Costumer Team");
+                      }}
+                      value="Costumer Team"
+                      control={<Radio sx={{ color: "white" }} />}
+                      label="לקוחות"
+                    />
+                  </RadioGroup>
+                </FormControl>
               </Grid>
             </Grid>
             <Typography variant="subtitle1">{errorMsg}</Typography>

@@ -10,6 +10,7 @@ import TextareaAutosize from "@mui/base/TextareaAutosize";
 import Switch from "@mui/material/Switch";
 import { useRecoilValue } from "recoil";
 import selectedDay from "../../atoms/selected-day";
+import loggedInUser from "../../atoms/logged-in-user";
 
 interface FormData {
   isTake: boolean;
@@ -17,6 +18,7 @@ interface FormData {
   endHour: string;
   flexible: boolean;
   comment: string;
+  retention: boolean;
 }
 
 interface AddingModalProps {
@@ -35,6 +37,7 @@ const AddingModal = ({
   setIsAdd,
   onCloseModal,
 }: AddingModalProps) => {
+  const loggedUser = useRecoilValue(loggedInUser);
   const day = useRecoilValue(selectedDay);
   return (
     <React.Fragment>
@@ -98,6 +101,7 @@ const AddingModal = ({
                 type={"time"}
               />
             </Box>
+
             <Box sx={{}}>
               <Typography>:משמרת נגמרת ב</Typography>
               <TextField
@@ -113,6 +117,23 @@ const AddingModal = ({
                 type={"time"}
               />
             </Box>
+            {loggedUser.role === "Costumer Team" && (
+              <FormControlLabel
+                label="?ריטנשן"
+                control={
+                  <Switch
+                    checked={formData.retention}
+                    sx={{ color: "white" }}
+                    onChange={(event) =>
+                      setFormData((prevState: FormData) => ({
+                        ...prevState,
+                        retention: event.target.checked,
+                      }))
+                    }
+                  />
+                }
+              />
+            )}
 
             <TextareaAutosize
               style={{
@@ -123,7 +144,7 @@ const AddingModal = ({
                 maxHeight: "120px",
                 minHeight: "120px",
               }}
-              maxLength={120}
+              maxLength={350}
               maxRows={5}
               value={formData.comment}
               dir={"rtl"}

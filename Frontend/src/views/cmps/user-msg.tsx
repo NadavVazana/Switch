@@ -38,7 +38,7 @@ function UserMessage() {
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         open={snack.isOpen}
-        autoHideDuration={3500}
+        autoHideDuration={2000}
         onClose={handleClose}
         action={action}
       >

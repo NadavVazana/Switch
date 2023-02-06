@@ -15,6 +15,7 @@ import Loader from "./loader";
 import isLoadingSelector from "../../selectors/is-loading";
 import allDates from "../../atoms/all-dates";
 import AddingModal from "./adding-modal";
+import { FormControlLabel, Switch } from "@mui/material";
 
 function SetSwitchModal() {
   const selectedDay = useRecoilValue(selectedDaySelector);
@@ -27,6 +28,7 @@ function SetSwitchModal() {
   const loggedInUser = useRecoilValue(loggedInUserSelector);
   const setSnackbar = useSetRecoilState(snackbar);
   const setDatesList = useSetRecoilState(allDates);
+  const [isRetention, setIsRetention] = useState(true);
 
   const [currentId, setCurrentId] = useState("");
   const initialForm = {
@@ -35,6 +37,7 @@ function SetSwitchModal() {
     endHour: "",
     flexible: false,
     comment: "",
+    retention: false,
   };
   const [formData, setFormData] = useState(initialForm);
 
@@ -67,6 +70,7 @@ function SetSwitchModal() {
           _id: loggedInUser._id,
           phone: loggedInUser.phone,
           fullName: `${loggedInUser.firstName} ${loggedInUser.lastName}`,
+          role: loggedInUser.role,
         },
       };
 
@@ -79,7 +83,7 @@ function SetSwitchModal() {
         });
         return;
       } else {
-        const allDatesList = await calendarService.getAllDates();
+        let allDatesList = await calendarService.getAllDates();
 
         if (allDatesList) {
           setDatesList(allDatesList);
@@ -179,6 +183,7 @@ function SetSwitchModal() {
       endHour: row.endHour,
       flexible: row.flexible,
       comment: row.comment,
+      retention: row.retention,
     });
   };
 
@@ -227,12 +232,26 @@ function SetSwitchModal() {
           ) : (
             <div>
               {" "}
+              {loggedInUser.role === "Costumer Team" && (
+                <FormControlLabel
+                  sx={{ position: "absolute", top: "20px", left: "20px" }}
+                  label="ריטנשן"
+                  control={
+                    <Switch
+                      value={isRetention}
+                      defaultChecked={true}
+                      onChange={(event) => setIsRetention(event.target.checked)}
+                    />
+                  }
+                />
+              )}
               <img
                 onClick={() => onPressAdd()}
                 src={require("../../assets/imgs/plus-svgrepo-com.svg").default}
                 alt="add-shift"
               />
               <SwitchTable
+                isRetention={isRetention}
                 onDeleteSwitch={onDeleteSwitch}
                 onEdit={onEdit}
                 dateList={dateList.switches}
@@ -241,7 +260,13 @@ function SetSwitchModal() {
             </div>
           )}
         </section>
-        <div onClick={onCloseModal} className="black-screen"></div>
+        <div
+          onClick={() => {
+            onCloseModal();
+            setIsRetention(true);
+          }}
+          className="black-screen"
+        ></div>
       </React.Fragment>
     ) : (
       <AddingModal

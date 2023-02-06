@@ -104,10 +104,11 @@ export default function UserSideMenu({
       <React.Fragment key={"right"}>
         <img
           style={{
-            position: "fixed",
-            top: "20px",
-            right: "20px",
-            width: "40px",
+            cursor: "pointer",
+            position: "absolute",
+            top: "15px",
+            right: "15px",
+            width: "30px",
           }}
           onClick={toggleDrawer("right", true)}
           src={require("../../assets/imgs/menu-svgrepo-com.svg").default}

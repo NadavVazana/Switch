@@ -29,6 +29,7 @@ export const UserPage = () => {
     email: loggedUser.email,
     phone: loggedUser.phone,
     img: loggedUser.img,
+    role: loggedUser.role,
   };
 
   const [profileForm, setProfileForm] = useState(initialForm);
@@ -39,6 +40,7 @@ export const UserPage = () => {
     endHour: "",
     flexible: false,
     comment: "",
+    retention: false,
   };
   const [formData, setFormData] = useState(initialEditForm);
 
@@ -109,6 +111,11 @@ export const UserPage = () => {
   const onLogout = async () => {
     await userService.logout();
     navigate("/");
+    setSnackbar({
+      isOpen: true,
+      msg: "Logged out successfully!",
+      variant: "error",
+    });
     setLoggedUser({} as LoggedInUser);
   };
 
@@ -126,6 +133,7 @@ export const UserPage = () => {
       endHour: row.endHour,
       flexible: row.flexible,
       comment: row.comment,
+      retention: row.retention,
     });
   };
 
@@ -181,13 +189,20 @@ export const UserPage = () => {
       )}
       <UserSideMenu setIsProfileModal={setIsProfileModal} onLogout={onLogout} />
       <Typography
-        sx={{ textAlign: "center", marginBlock: "20px" }}
+        sx={{
+          textAlign: "center",
+          marginBlock: "20px",
+          fontWeight: "700",
+          paddingInlineStart: { xs: "20px", md: "unset" },
+          fontSize: { xs: "18px", md: "25px" },
+        }}
         variant="h4"
       >
         Welcome {loggedUser.firstName}
       </Typography>
       {dates.length > 0 && dates[0] !== emptyDate && (
         <SwitchTable
+          isRetention={true}
           dateList={dates}
           onDeleteSwitch={onDeleteSwitch}
           onEdit={onEdit}
@@ -198,14 +213,14 @@ export const UserPage = () => {
       <Button
         variant="contained"
         sx={{
-          position: "fixed",
+          position: "absolute",
           left: "10px",
-          bottom: { xs: "20px", md: "unset" },
-          top: { xs: "unset", md: "20px" },
+          bottom: { xs: "unset", md: "unset" },
+          top: { xs: "10px", md: "20px" },
         }}
         onClick={() => navigate("/")}
       >
-        חזור לעמוד הבית
+        ←
       </Button>
 
       {isProfileModal && (
