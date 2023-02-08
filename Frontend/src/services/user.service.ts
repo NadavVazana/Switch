@@ -9,6 +9,7 @@ export const userService = {
   logout,
   updateUser,
   getLoggedInUser,
+  updateStorage,
 };
 
 async function login(user: Auth): Promise<LoggedInUser | null> {
@@ -17,7 +18,7 @@ async function login(user: Auth): Promise<LoggedInUser | null> {
       "auth/login",
       user
     );
-    sessionStorage.setItem("loggedInUser", JSON.stringify(loggedUser));
+    localStorage.setItem("loggedInUser", JSON.stringify(loggedUser));
     return loggedUser;
   } catch (error) {
     return null;
@@ -25,7 +26,7 @@ async function login(user: Auth): Promise<LoggedInUser | null> {
 }
 function getLoggedInUser(): LoggedInUser | null {
   const loggedInUser = JSON.parse(
-    sessionStorage.getItem("loggedInUser") || " {}"
+    localStorage.getItem("loggedInUser") || " {}"
   );
   if (!Object.keys(loggedInUser).length) {
     return null;
@@ -38,6 +39,11 @@ async function updateUser(user: LoggedInUser): Promise<LoggedInUser | null> {
   } catch (error) {
     return null;
   }
+}
+
+function updateStorage(user: LoggedInUser) {
+  localStorage.clear();
+  localStorage.setItem("loggedInUser", JSON.stringify(user));
 }
 
 async function signup(user: User): Promise<LoggedInUser | null> {
@@ -56,7 +62,7 @@ async function signup(user: User): Promise<LoggedInUser | null> {
 
 async function logout(): Promise<null | void> {
   try {
-    sessionStorage.clear();
+    localStorage.clear();
     await httpService.post("auth/logout");
   } catch (error) {
     return null;

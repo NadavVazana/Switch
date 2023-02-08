@@ -14,21 +14,32 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { Date as SWDate } from "../../models/date";
 import { useRecoilValue } from "recoil";
 import loggedInUser from "../../atoms/logged-in-user";
+import { useState } from "react";
 
 interface RowProps {
   row: SWDate;
   onEdit: Function;
   onDeleteSwitch: Function;
   isForUser: boolean;
+  setDeleteHover: Function;
+  deleteHover: string;
 }
 
-function Row({ row, onEdit, onDeleteSwitch, isForUser }: RowProps) {
+function Row({
+  row,
+  onEdit,
+  onDeleteSwitch,
+  deleteHover,
+  isForUser,
+  setDeleteHover,
+}: RowProps) {
   const loggedUser = useRecoilValue(loggedInUser);
   const [open, setOpen] = React.useState(false);
 
   return (
     <React.Fragment>
       <TableRow
+        onClick={() => setOpen(!open)}
         sx={{
           "& > *": {
             borderBottom: "unset",
@@ -48,41 +59,91 @@ function Row({ row, onEdit, onDeleteSwitch, isForUser }: RowProps) {
           </IconButton>
         </TableCell>
         {isForUser && (
-          <TableCell sx={{ fontWeight: "700" }} component="th" scope="row">
+          <TableCell
+            align="center"
+            sx={{ fontWeight: "700", width: "200px" }}
+            component="th"
+            scope="row"
+          >
             {new Date(row.date).toLocaleDateString("he")}
           </TableCell>
         )}
         <TableCell
-          sx={{ fontWeight: "700", padding: "14px", width: "150px" }}
-          align="left"
-        >{`${row.startHour} - ${row.endHour}`}</TableCell>
-        <TableCell sx={{ width: "150px", fontWeight: "700" }} align="left">
-          {row.isTake ? "לוקח" : "מוסר"}{" "}
-          {row.retention && (
+          sx={{
+            fontWeight: "700",
+            padding: "14px",
+            width: "150px",
+            position: "relative",
+          }}
+          align="center"
+        >
+          {`${row.startHour} - ${row.endHour}`}
+          {row.retention && loggedUser.role === "Costumer Team" && (
             <img
               style={{
-                position: "static",
-                width: "10px",
+                position: "absolute",
+                width: "18px",
+                left: "100%",
+                top: "47%",
+                transform: "translate(-50%,-50%)",
                 filter: "invert(0%)",
               }}
               src={require("../../assets/imgs/retention.svg").default}
-              alt=""
+              alt="retention"
+            />
+          )}
+          {row.retention && loggedUser.role === "Courier Team" && (
+            <img
+              style={{
+                position: "absolute",
+                width: "18px",
+                left: "100%",
+                top: "47%",
+                transform: "translate(-50%,-50%)",
+                filter: "invert(0%)",
+              }}
+              src={require("../../assets/imgs/unassign.svg").default}
+              alt="retention"
             />
           )}
         </TableCell>
-        <TableCell sx={{ width: "150px", fontWeight: "700" }}>
+        <TableCell sx={{ width: "150px", fontWeight: "700" }} align="center">
+          {row.isTake ? "לוקח" : "מוסר"}{" "}
+        </TableCell>
+        <TableCell align="center" sx={{ width: "150px", fontWeight: "700" }}>
           {row.flexible ? "כן" : "לא"}
         </TableCell>
 
         {row.owner._id === loggedUser._id && isForUser ? (
-          <TableCell onClick={() => onEdit(row)} sx={{ cursor: "pointer" }}>
+          <TableCell
+            align="center"
+            onClick={(event) => {
+              event.stopPropagation();
+              setDeleteHover("");
+              onEdit(row);
+            }}
+            sx={{ cursor: "pointer", width: "150px" }}
+          >
             ערוך
           </TableCell>
         ) : null}
         {row.owner._id === loggedUser._id && isForUser ? (
           <TableCell
-            onClick={() => onDeleteSwitch(row._id, row.date, row.owner)}
-            sx={{ cursor: "pointer" }}
+            align="center"
+            onClick={(event) => {
+              event.stopPropagation();
+              if (row._id !== deleteHover) {
+                setDeleteHover(row._id);
+              } else {
+                onDeleteSwitch(row._id, row.date);
+              }
+            }}
+            sx={{
+              transition: "all 0.3s",
+              backgroundColor: deleteHover === row._id ? "#ff4d4d" : "#97AFB9",
+              cursor: "pointer",
+              width: "150px",
+            }}
           >
             מחק
           </TableCell>
@@ -142,12 +203,26 @@ function Row({ row, onEdit, onDeleteSwitch, isForUser }: RowProps) {
                         )
                       }
                       sx={{
+                        display: "flex",
+                        alignItems: "center",
                         fontWeight: "700",
                         cursor: "pointer",
                         padding: "10px",
                       }}
                     >
-                      {row.owner.phone}
+                      {row.owner.phone}{" "}
+                      <img
+                        style={{
+                          position: "static",
+                          width: "20px",
+                          filter: "invert(0%)",
+                        }}
+                        src={
+                          require("../../assets/imgs/whatsapp-svgrepo-com.svg")
+                            .default
+                        }
+                        alt=""
+                      />
                     </TableCell>
                   </TableRow>
                 </TableBody>
@@ -191,28 +266,46 @@ interface SwitchTableProps {
   onDeleteSwitch: Function;
   isForUser: boolean;
   isRetention: boolean;
+  isUnassign: boolean;
 }
 
 function SwitchTable({
   dateList,
+  isUnassign,
   onEdit,
   onDeleteSwitch,
   isForUser,
   isRetention,
 }: SwitchTableProps) {
   const [isEarlyHoursUp, setIsEarlyHoursUp] = React.useState(false);
-  const [isTakeUp, setIsTakeUp] = React.useState(true);
   const [isEarlyDateUp, setIsEarlyDateUp] = React.useState(true);
   let [sortedDateList, setSortedDateList] = React.useState([...dateList]);
+  const [takeOrGive, setTakeOrGive] = React.useState("לוקח");
+  const [deleteHover, setDeleteHover] = useState("");
+  const loggedUser = useRecoilValue(loggedInUser);
+
+  window.addEventListener("click", (event) => {
+    event.stopPropagation();
+    setDeleteHover("");
+  });
 
   React.useEffect(() => {
-    if (!isRetention) {
-      const withRetentions = sortedDateList.filter((date) => !date.retention);
-      setSortedDateList(withRetentions);
+    if (loggedUser.role === "Costumer Team") {
+      if (!isRetention) {
+        const withRetentions = sortedDateList.filter((date) => !date.retention);
+        setSortedDateList(withRetentions);
+      } else {
+        setSortedDateList([...dateList]);
+      }
     } else {
-      setSortedDateList([...dateList]);
+      if (!isUnassign) {
+        const withRetentions = sortedDateList.filter((date) => !date.retention);
+        setSortedDateList(withRetentions);
+      } else {
+        setSortedDateList([...dateList]);
+      }
     }
-  }, [dateList, isRetention]);
+  }, [dateList, isRetention, isUnassign]);
 
   const onFilterHours = () => {
     setIsEarlyHoursUp((prevState) => !prevState);
@@ -221,19 +314,6 @@ function SwitchTable({
       sortedDateList.sort((a, b) => {
         if (!isEarlyHoursUp) return a.startHour.localeCompare(b.startHour);
         else return b.startHour.localeCompare(a.startHour);
-      })
-    );
-  };
-
-  const onFilterTakes = () => {
-    setIsTakeUp((prevState) => !prevState);
-    setSortedDateList(
-      sortedDateList.sort((a, b) => {
-        if (!isTakeUp) {
-          return +b.isTake - +a.isTake;
-        } else {
-          return +a.isTake - +b.isTake;
-        }
       })
     );
   };
@@ -253,7 +333,11 @@ function SwitchTable({
 
   return (
     <TableContainer
-      sx={!isForUser ? { overflowX: "hidden" } : { overflowX: "auto" }}
+      sx={
+        !isForUser
+          ? { overflowX: "hidden", position: "static" }
+          : { overflowX: "auto" }
+      }
       component={Paper}
     >
       <Table aria-label="collapsible table">
@@ -262,7 +346,9 @@ function SwitchTable({
             <TableCell sx={{ width: "10px" }} />
             {isForUser && (
               <TableCell
+                align="center"
                 sx={{
+                  minWidth: "60px",
                   cursor: "pointer",
                   paddingInlineEnd: "0",
                 }}
@@ -272,6 +358,7 @@ function SwitchTable({
               </TableCell>
             )}
             <TableCell
+              align="center"
               onClick={onFilterHours}
               sx={{
                 cursor: "pointer",
@@ -283,16 +370,23 @@ function SwitchTable({
             </TableCell>
 
             <TableCell
-              onClick={onFilterTakes}
+              align="center"
+              onClick={() =>
+                setTakeOrGive((prevState) => {
+                  if (prevState === "לוקח") return "מוסר";
+                  else return "לוקח";
+                })
+              }
               sx={{
                 width: "50px",
                 cursor: "pointer",
                 minWidth: "100px",
               }}
             >
-              ?מוסר או לוקח {isTakeUp ? "↑" : "↓"}{" "}
+              {takeOrGive} ←
             </TableCell>
             <TableCell
+              align="center"
               sx={{
                 cursor: "pointer",
                 paddingInlineEnd: "0",
@@ -303,16 +397,36 @@ function SwitchTable({
             </TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
-          {sortedDateList.map((date: SWDate) => (
-            <Row
-              isForUser={isForUser}
-              onDeleteSwitch={onDeleteSwitch}
-              onEdit={onEdit}
-              key={date._id}
-              row={date}
-            />
-          ))}
+        <TableBody sx={{ position: "static" }}>
+          {sortedDateList.map((date: SWDate) => {
+            if (takeOrGive === "לוקח" && date.isTake) {
+              return (
+                <Row
+                  deleteHover={deleteHover}
+                  setDeleteHover={setDeleteHover}
+                  isForUser={isForUser}
+                  onDeleteSwitch={onDeleteSwitch}
+                  onEdit={onEdit}
+                  key={date._id}
+                  row={date}
+                />
+              );
+            } else if (takeOrGive === "מוסר" && !date.isTake) {
+              return (
+                <Row
+                  deleteHover={deleteHover}
+                  setDeleteHover={setDeleteHover}
+                  isForUser={isForUser}
+                  onDeleteSwitch={onDeleteSwitch}
+                  onEdit={onEdit}
+                  key={date._id}
+                  row={date}
+                />
+              );
+            } else {
+              return null;
+            }
+          })}
         </TableBody>
       </Table>
     </TableContainer>

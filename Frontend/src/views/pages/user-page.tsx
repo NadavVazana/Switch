@@ -1,5 +1,4 @@
 import { Button, TextField, Typography } from "@mui/material";
-import { Box } from "@mui/system";
 import { FormEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
@@ -8,8 +7,10 @@ import snackbar from "../../atoms/snackbar";
 import { Date as SWDate } from "../../models/date";
 import { LoggedInUser } from "../../models/logged-in-user";
 import { calendarService, emptyDate } from "../../services/calendar.service";
+import { cloudService } from "../../services/cloudinary-service";
 import { userService } from "../../services/user.service";
 import AddingModal from "../cmps/adding-modal";
+import Loader from "../cmps/loader";
 import SwitchTable from "../cmps/switch-table";
 import UserSideMenu from "../cmps/user-side-menu";
 
@@ -23,6 +24,8 @@ export const UserPage = () => {
   const [currentDay, setCurrentDay] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [currentId, setCurrentId] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   const initialForm = {
     firstName: loggedUser.firstName,
     lastName: loggedUser.lastName,
@@ -33,6 +36,9 @@ export const UserPage = () => {
   };
 
   const [profileForm, setProfileForm] = useState(initialForm);
+  useEffect(() => {
+    setProfileForm(initialForm);
+  }, [loggedUser]);
 
   const initialEditForm = {
     isTake: false,
@@ -76,6 +82,7 @@ export const UserPage = () => {
       ...profileForm,
       _id: loggedUser._id,
     });
+    userService.updateStorage({ ...profileForm, _id: loggedUser._id });
 
     if (!updatedUser) {
       setSnackbar({
@@ -176,6 +183,27 @@ export const UserPage = () => {
     }
   };
 
+  const handleUpload = async (ev: any) => {
+    setIsLoading(true);
+    const url = await cloudService.uploadImg(ev);
+    if (url) {
+      setIsLoading(false);
+      setSnackbar({
+        isOpen: true,
+        msg: "Image has been uploaded!",
+        variant: "success",
+      });
+      setProfileForm((prevState) => ({ ...prevState, img: url }));
+    } else {
+      setIsLoading(false);
+      setSnackbar({
+        isOpen: true,
+        msg: "There's been a problem with uploading the img",
+        variant: "error",
+      });
+    }
+  };
+
   return (
     <section className="user-page">
       {isEditing && (
@@ -187,6 +215,7 @@ export const UserPage = () => {
           onCloseModal={onCloseModal}
         />
       )}
+
       <UserSideMenu setIsProfileModal={setIsProfileModal} onLogout={onLogout} />
       <Typography
         sx={{
@@ -202,6 +231,7 @@ export const UserPage = () => {
       </Typography>
       {dates.length > 0 && dates[0] !== emptyDate && (
         <SwitchTable
+          isUnassign={true}
           isRetention={true}
           dateList={dates}
           onDeleteSwitch={onDeleteSwitch}
@@ -259,36 +289,66 @@ export const UserPage = () => {
               value={profileForm.phone}
               placeholder="Phone Number"
             />
-            <TextField
-              sx={{ backgroundColor: "white", width: "60%" }}
-              onChange={(event) =>
-                setProfileForm((prevState) => ({
-                  ...prevState,
-                  img: event.target.value,
-                }))
-              }
-              placeholder="Profile Image URL"
+
+            <label
+              style={{
+                cursor: "pointer",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+              htmlFor="upload"
+            >
+              <Typography color="white">Profile Picture:</Typography>
+              <img
+                style={{ width: "60px" }}
+                src={
+                  require("../../assets/imgs/upload-1-svgrepo-com.svg").default
+                }
+                alt="upload-profile-pic"
+              />
+            </label>
+            <input
+              style={{ display: "none" }}
+              id="upload"
+              onInput={handleUpload}
+              type="file"
             />
-            <Box sx={{ paddingTop: "20px" }}>
-              <Button
-                sx={{
-                  backgroundColor: "#36AFD4",
-                }}
-                type="submit"
-                variant="contained"
-              >
-                אישור
-              </Button>
-            </Box>
+            <Button
+              sx={{
+                backgroundColor: "#36AFD4",
+              }}
+              variant="contained"
+              type="submit"
+            >
+              אישור
+            </Button>
+            <Button
+              onClick={() => setIsProfileModal(false)}
+              color="error"
+              type="button"
+              variant="contained"
+            >
+              ביטול
+            </Button>
           </form>
         </div>
       )}
       {isProfileModal && (
         <div
-          onClick={() => setIsProfileModal(false)}
+          onClick={() => {
+            setIsProfileModal(false);
+          }}
           className="black-screen-profile"
         ></div>
       )}
+      {isLoading && (
+        <div
+          style={{ zIndex: "100000", cursor: "unset" }}
+          className="black-screen"
+        ></div>
+      )}
+      {isLoading && <Loader />}
     </section>
   );
 };

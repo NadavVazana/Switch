@@ -1,3 +1,4 @@
+import { calendarService } from "./api/calendar/calendar.service";
 import express from "express";
 import cors from "cors";
 import axios from "axios";
@@ -11,6 +12,10 @@ const corsOptions = {
 setInterval(async () => {
   await axios.get("https://call-t1ur.onrender.com/api/test");
 }, 600000);
+
+setInterval(async () => {
+  await calendarService.cleanUp();
+}, 86400000);
 
 app.use(cors(corsOptions));
 import * as http from "http";

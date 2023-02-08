@@ -1,3 +1,4 @@
+import About from "./views/pages/about";
 import HomePage from "./views/pages/home-page";
 import SignIn from "./views/pages/login";
 import SignUp from "./views/pages/sign-up";
@@ -22,6 +23,11 @@ const routes = [
   {
     path: "/user",
     element: <UserPage />,
+    label: "👨",
+  },
+  {
+    path: "/about",
+    element: <About />,
     label: "👨",
   },
 ];

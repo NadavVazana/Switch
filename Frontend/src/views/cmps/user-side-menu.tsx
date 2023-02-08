@@ -71,6 +71,33 @@ export default function UserSideMenu({
           </ListItem>
         ))}
       </List>
+      <List>
+        {["Tutorial"].map((text, index) => (
+          <ListItem
+            onClick={() => {
+              window.open(
+                "https://www.youtube.com/watch?v=8Sm2fYjK2k8&ab_channel=NadavVazana"
+              );
+            }}
+            key={text}
+            disablePadding
+          >
+            <ListItemButton>
+              <ListItemIcon>
+                <img
+                  style={{ width: "30px" }}
+                  src={
+                    require("../../assets/imgs/tutorial-enter-svgrepo-com.svg")
+                      .default
+                  }
+                  alt="edit-profile"
+                />
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
       <Divider />
       <List>
         {["Logout"].map((text, index) => (

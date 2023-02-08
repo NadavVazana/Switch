@@ -29,10 +29,11 @@ function SetSwitchModal() {
   const setSnackbar = useSetRecoilState(snackbar);
   const setDatesList = useSetRecoilState(allDates);
   const [isRetention, setIsRetention] = useState(true);
+  const [isUnassign, setIsUnassign] = useState(true);
 
   const [currentId, setCurrentId] = useState("");
   const initialForm = {
-    isTake: false,
+    isTake: true,
     startHour: "",
     endHour: "",
     flexible: false,
@@ -73,6 +74,26 @@ function SetSwitchModal() {
           role: loggedInUser.role,
         },
       };
+      const dates = await calendarService.getDateListByOwnerId(
+        loggedInUser._id
+      );
+      if (!formData.isTake && dates) {
+        const canAdd = dates.filter(
+          (date) =>
+            date.date === selectedDay.toLocaleDateString("en-CA") &&
+            !date.isTake
+        );
+
+        if (canAdd.length >= 2) {
+          setSnackbar({
+            isOpen: true,
+            msg: "Can add only 2 give switches for a date!",
+            variant: "error",
+          });
+          setIsOpen(false);
+          return;
+        }
+      }
 
       const addedDate = await calendarService.addDate(data);
       if (!addedDate) {
@@ -198,20 +219,6 @@ function SetSwitchModal() {
       return;
     }
 
-    const canAdd = dates.filter(
-      (date) => date.date === selectedDay.toLocaleDateString("en-CA")
-    );
-
-    if (canAdd.length >= 2) {
-      setSnackbar({
-        isOpen: true,
-        msg: "Can add only 2 switches for a date!",
-        variant: "error",
-      });
-      setIsOpen(false);
-      return;
-    }
-
     setIsAdd(true);
     setIsEditMode(false);
     setFormData(initialForm);
@@ -245,12 +252,26 @@ function SetSwitchModal() {
                   }
                 />
               )}
+              {loggedInUser.role === "Courier Team" && (
+                <FormControlLabel
+                  sx={{ position: "absolute", top: "20px", left: "20px" }}
+                  label="אנאסיין"
+                  control={
+                    <Switch
+                      value={isUnassign}
+                      defaultChecked={true}
+                      onChange={(event) => setIsUnassign(event.target.checked)}
+                    />
+                  }
+                />
+              )}
               <img
                 onClick={() => onPressAdd()}
                 src={require("../../assets/imgs/plus-svgrepo-com.svg").default}
                 alt="add-shift"
               />
               <SwitchTable
+                isUnassign={isUnassign}
                 isRetention={isRetention}
                 onDeleteSwitch={onDeleteSwitch}
                 onEdit={onEdit}

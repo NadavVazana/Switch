@@ -96,10 +96,10 @@ async function deleteSwitchById(dateId: string, date: string): Promise<void> {
     throw new createHttpError.NotFound("Could'nt delete the switch");
   }
 
-  await _cleanUp();
+  await cleanUp();
 }
 
-async function _cleanUp(): Promise<void> {
+async function cleanUp(): Promise<void> {
   const calendar = await (await collection()).find({}).toArray();
   let cleanCalendar = calendar.filter((date) => date.switches.length);
   cleanCalendar = calendar.filter((date) => !isDayPassed(new Date(date.date)));
@@ -146,6 +146,7 @@ async function update(updatedSwitch: Switch): Promise<void> {
 
 export const calendarService = {
   query,
+  cleanUp,
   insertSwitch,
   deleteSwitchById,
   update,

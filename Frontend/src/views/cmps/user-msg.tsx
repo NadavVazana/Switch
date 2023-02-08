@@ -36,7 +36,7 @@ function UserMessage() {
   return (
     <div>
       <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         open={snack.isOpen}
         autoHideDuration={2000}
         onClose={handleClose}

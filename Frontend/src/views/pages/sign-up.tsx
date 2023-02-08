@@ -49,7 +49,7 @@ function SignUp() {
   const [role, setRole] = useState("Courier Team");
   const setSnackbar = useSetRecoilState(snackbar);
   const [errorMsg, setErrorMsg] = React.useState("");
-  const phoneStarts = ["050", "052", "053", "057", "055", "054"];
+  const phoneStarts = ["050", "052", "053", "057", "055", "054", "058"];
   const navigate = useNavigate();
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -106,7 +106,7 @@ function SignUp() {
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
+            marginTop: { xs: 0, md: 8 },
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -235,7 +235,7 @@ function SignUp() {
           position: "fixed",
           width: "70px",
           cursor: "pointer",
-          bottom: "10px",
+          top: "10px",
           right: "10px",
         }}
         className="go-back-btn"

@@ -38,6 +38,7 @@ const AddingModal = ({
   onCloseModal,
 }: AddingModalProps) => {
   const loggedUser = useRecoilValue(loggedInUser);
+
   const day = useRecoilValue(selectedDay);
   return (
     <React.Fragment>
@@ -120,6 +121,23 @@ const AddingModal = ({
             {loggedUser.role === "Costumer Team" && (
               <FormControlLabel
                 label="?ריטנשן"
+                control={
+                  <Switch
+                    checked={formData.retention}
+                    sx={{ color: "white" }}
+                    onChange={(event) =>
+                      setFormData((prevState: FormData) => ({
+                        ...prevState,
+                        retention: event.target.checked,
+                      }))
+                    }
+                  />
+                }
+              />
+            )}
+            {loggedUser.role === "Courier Team" && (
+              <FormControlLabel
+                label="?אנאסיין"
                 control={
                   <Switch
                     checked={formData.retention}
