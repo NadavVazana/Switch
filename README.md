@@ -68,6 +68,7 @@ In the side menu you can logout from the user, edit your profile details, and ev
  - MUI
  - React JS
  - Namecheap and Render for the application production.
+ - Typescript
 
 ## Authors:
 
